@@ -27,17 +27,15 @@ def step1_prepare_data():
     print("📥 Step 1: Data Preparation")
     print("-" * 40)
     print("This will:")
-    print("  • Load Flickr30k dataset (test split)")
-    print("  • Filter for space-related images using keywords")
-    print("  • Download images with human-written captions")
+    print("  • Load NASA APOD dataset (Astronomy Picture of the Day)")
+    print("  • Download high-quality space images with detailed astronomical captions")
     print("  • Create proper ML splits: 80% train, 10% validation, 10% test")
     print("  • Organize data in 'images/' folder")
-    print("  • Show sample captions for review")
     print()
     
-    if input("Run data preparation? (y/n): ").lower() == 'y':
-        print("\n🚀 Running data preparation...")
-        os.system("python filter_flickr30k.py")
+    if input("Run NASA APOD data preparation? (y/n): ").lower() == 'y':
+        print("\n🚀 Running NASA APOD data preparation...")
+        os.system("python nasa_space_filter.py")
     else:
         print("⏭️  Skipping data preparation")
 

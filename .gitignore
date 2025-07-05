@@ -1,3 +1,6 @@
+# Environment configuration
+config.env
+
 # Python
 __pycache__/
 *.py[cod]
@@ -25,8 +28,8 @@ MANIFEST
 venv/
 env/
 ENV/
-.venv/
-.env/
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
@@ -37,7 +40,61 @@ ENV/
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# Project specific
+images/
+fine_tuned_clip/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+
+# Logs
+*.log
+logs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
 # Project specific
 space_dataset/

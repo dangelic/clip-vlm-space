@@ -65,11 +65,23 @@ classifier.visualize_classification(image_path, top_k=5)
 python demo.py
 ```
 
-### Filter a Dataset
+### Download NASA Space Images
 
 ```sh
-python space_image_filter.py /path/to/your/images
+python nasa_space_filter.py
 ```
+
+**First time setup:**
+1. Get a free NASA API key at https://api.nasa.gov/
+2. Copy the sample config file:
+   ```bash
+   cp config.env.sample config.env
+   ```
+3. Edit `config.env` with your API key:
+   ```bash
+   # Replace DEMO_KEY with your actual API key
+   NASA_API_KEY=your_api_key_here
+   ```
 
 ---
 
