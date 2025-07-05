@@ -87,49 +87,70 @@ class NASASpaceFilter:
         space_candidates = []
         
         try:
-            # Fetch images in batches
-            params = {
-                'api_key': api_key,
-                'start_date': start_date,
-                'end_date': end_date,
-                'count': min(max_images * 2, 100)  # Get more than needed to filter
-            }
+            # NASA API limits: 30 requests/hour, 50 requests/day
+            # We need to fetch images one by one to stay within limits
+            print(f"🔍 Fetching NASA APOD images (respecting rate limits)...")
+            print(f"   API limits: 30 requests/hour, 50 requests/day")
             
-            print(f"🔍 Fetching NASA APOD images from {start_date} to {end_date}...")
-            response = requests.get(api_url, params=params, timeout=30)
-            response.raise_for_status()
+            space_candidates = []
+            current_date = start_date
             
-            apod_data = response.json()
-            print(f"✅ Fetched {len(apod_data)} NASA APOD entries")
-            
-            # Filter for images with valid URLs
-            for i, item in enumerate(apod_data):
-                if len(space_candidates) >= max_images:
-                    break
+            # Fetch images one by one to respect rate limits
+            while len(space_candidates) < max_images and current_date <= end_date:
+                params = {
+                    'api_key': api_key,
+                    'date': current_date
+                }
                 
-                # Check if it's an image (not video)
-                if item.get('media_type') == 'image' and item.get('hdurl'):
-                    title = item.get('title', '')
-                    explanation = item.get('explanation', '')
-                    date = item.get('date', '')
-                    url = item.get('hdurl')
+                try:
+                    response = requests.get(api_url, params=params, timeout=30)
+                    response.raise_for_status()
                     
-                    # Combine title and explanation for rich caption
-                    caption = f"{title}. {explanation}"
+                    item = response.json()
                     
-                    space_candidates.append({
-                        'item': item,
-                        'caption': caption,
-                        'title': title,
-                        'explanation': explanation,
-                        'url': url,
-                        'date': date,
-                        'index': i
-                    })
+                    # Check if it's an image (not video)
+                    if item.get('media_type') == 'image' and item.get('hdurl'):
+                        title = item.get('title', '')
+                        explanation = item.get('explanation', '')
+                        date = item.get('date', '')
+                        url = item.get('hdurl')
+                        
+                        # Combine title and explanation for rich caption
+                        caption = f"{title}. {explanation}"
+                        
+                        space_candidates.append({
+                            'item': item,
+                            'caption': caption,
+                            'title': title,
+                            'explanation': explanation,
+                            'url': url,
+                            'date': date,
+                            'index': len(space_candidates)
+                        })
+                        
+                        print(f"  📊 Found image {len(space_candidates)}/{max_images}: {title[:50]}...")
+                    
+                    # Progress update
+                    if len(space_candidates) % 10 == 0:
+                        print(f"  📊 Processed {current_date}, found {len(space_candidates)} valid images")
+                    
+                    # Be nice to NASA servers - wait between requests
+                    time.sleep(2)
+                    
+                except requests.exceptions.HTTPError as e:
+                    if e.response.status_code == 429:  # Rate limit exceeded
+                        print(f"⚠️  Rate limit reached. Stopping at {len(space_candidates)} images.")
+                        break
+                    else:
+                        print(f"⚠️  Skipping {current_date}: {e}")
+                except Exception as e:
+                    print(f"⚠️  Error fetching {current_date}: {e}")
                 
-                # Progress update
-                if (i + 1) % 20 == 0:
-                    print(f"  📊 Processed {i+1} entries, found {len(space_candidates)} valid images")
+                # Move to next date
+                from datetime import datetime, timedelta
+                current_date_obj = datetime.strptime(current_date, '%Y-%m-%d')
+                current_date_obj += timedelta(days=1)
+                current_date = current_date_obj.strftime('%Y-%m-%d')
             
             print(f"✅ Found {len(space_candidates)} NASA space images")
             
@@ -138,82 +159,76 @@ class NASASpaceFilter:
             print(f"   This might be due to API rate limits or network issues")
             return {}
         
-        # Create train/val/test splits (80/10/10)
-        total_images = len(space_candidates)
-        train_size = int(0.8 * total_images)
-        val_size = int(0.1 * total_images)
-        test_size = total_images - train_size - val_size
+        # Find the next available image number
+        existing_images = list(self.output_dir.glob("nasa_apod_*.jpg"))
+        if existing_images:
+            # Extract numbers from existing filenames and find the highest
+            numbers = []
+            for img_path in existing_images:
+                try:
+                    # Extract number from filename like "nasa_apod_0001.jpg"
+                    number_str = img_path.stem.split('_')[-1]
+                    numbers.append(int(number_str))
+                except (ValueError, IndexError):
+                    continue
+            
+            next_number = max(numbers) + 1 if numbers else 1
+        else:
+            next_number = 1
         
-        train_candidates = space_candidates[:train_size]
-        val_candidates = space_candidates[train_size:train_size + val_size]
-        test_candidates = space_candidates[train_size + val_size:]
+        print(f"📊 Found {len(existing_images)} existing images")
+        print(f"📊 Starting new images from number: {next_number}")
         
-        print(f"📊 Creating splits:")
-        print(f"   Train: {len(train_candidates)} images (80%)")
-        print(f"   Validation: {len(val_candidates)} images (10%)")
-        print(f"   Test: {len(test_candidates)} images (10%)")
-        
-        # Download images for each split
-        splits = {
-            'train': train_candidates,
-            'validation': val_candidates,
-            'test': test_candidates
-        }
-        
+        # Download all images without splitting
         space_images = []
         downloaded_count = 0
         preview_count = 0
         
-        for split_name, candidates in splits.items():
-            print(f"\n📥 Downloading {split_name} split ({len(candidates)} images)...")
-            
-            for i, candidate in enumerate(candidates):
-                # Show preview for first few matches
-                if preview_count < 10:
-                    print(f"🎯 Found NASA space image #{preview_count + 1} ({split_name}):")
-                    print(f"   Title: '{candidate['title']}'")
-                    print(f"   Date: {candidate['date']}")
-                    print(f"   URL: {candidate['url'][:60]}...")
-                    print()
-                    preview_count += 1
-                
-                # Download the image
-                image_url = candidate['url']
-                filename = f"nasa_apod_{split_name}_{i+1:04d}.jpg"
-                
-                print(f"  📥 Downloading {split_name} {i+1}/{len(candidates)}: {filename}")
-                print(f"    Title: {candidate['title'][:80]}...")
-                
-                if self.download_image(image_url, filename):
-                    space_images.append({
-                        'filename': filename,
-                        'caption': candidate['caption'],
-                        'title': candidate['title'],
-                        'explanation': candidate['explanation'],
-                        'split': split_name,
-                        'date': candidate['date'],
-                        'original_index': candidate['index'],
-                        'url': image_url
-                    })
-                    downloaded_count += 1
-                    time.sleep(1)  # Be nice to NASA servers
-                else:
-                    print(f"    ❌ Download failed")
+        print(f"\n📥 Downloading {len(space_candidates)} new NASA space images...")
         
-        print(f"✅ Downloaded {len(space_images)} NASA space images across all splits")
+        for i, candidate in enumerate(space_candidates):
+            # Show preview for first few matches
+            if preview_count < 10:
+                print(f"🎯 Found NASA space image #{preview_count + 1}:")
+                print(f"   Title: '{candidate['title']}'")
+                print(f"   Date: {candidate['date']}")
+                print(f"   URL: {candidate['url'][:60]}...")
+                print()
+                preview_count += 1
+            
+            # Download the image with sequential numbering
+            image_url = candidate['url']
+            filename = f"nasa_apod_{next_number + i:04d}.jpg"
+            
+            print(f"  📥 Downloading {i+1}/{len(space_candidates)}: {filename}")
+            print(f"    Title: {candidate['title'][:80]}...")
+            
+            if self.download_image(image_url, filename):
+                space_images.append({
+                    'filename': filename,
+                    'caption': candidate['caption'],
+                    'title': candidate['title'],
+                    'explanation': candidate['explanation'],
+                    'date': candidate['date'],
+                    'original_index': candidate['index'],
+                    'url': image_url
+                })
+                downloaded_count += 1
+                time.sleep(1)  # Be nice to NASA servers
+            else:
+                print(f"    ❌ Download failed")
+        
+        print(f"✅ Downloaded {len(space_images)} new NASA space images")
         
         # Save metadata
         metadata = {
             'dataset_source': 'NASA APOD API',
-            'api_key_used': 'DEMO_KEY',
+            'api_key_used': 'DEMO_KEY' if api_key == 'DEMO_KEY' else 'Custom Key',
             'date_range': f"{start_date} to {end_date}",
-            'total_processed': len(apod_data) if 'apod_data' in locals() else 0,
-            'space_images_found': len(space_images),
-            'splits': {
-                'train': len([img for img in space_images if img['split'] == 'train']),
-                'validation': len([img for img in space_images if img['split'] == 'validation']),
-                'test': len([img for img in space_images if img['split'] == 'test'])
-            },
+            'total_processed': len(space_candidates),
+            'new_images_downloaded': len(space_images),
+            'total_images_in_folder': len(existing_images) + len(space_images),
+            'next_image_number': next_number + len(space_images),
             'images': space_images
         }
         
@@ -221,26 +236,14 @@ class NASASpaceFilter:
         with open(metadata_file, 'w') as f:
             json.dump(metadata, f, indent=2)
         
-        # Create labels file for training (only train split)
-        train_labels = {}
+        # Create labels file for all images (no splitting yet)
+        all_labels = {}
         for img_data in space_images:
-            if img_data['split'] == 'train':
-                train_labels[img_data['filename']] = img_data['caption']
+            all_labels[img_data['filename']] = img_data['caption']
         
         labels_file = self.output_dir / "rich_labels.json"
         with open(labels_file, 'w') as f:
-            json.dump(train_labels, f, indent=2)
-        
-        # Create separate label files for each split
-        for split_name in ['train', 'validation', 'test']:
-            split_labels = {}
-            for img_data in space_images:
-                if img_data['split'] == split_name:
-                    split_labels[img_data['filename']] = img_data['caption']
-            
-            split_labels_file = self.output_dir / f"labels_{split_name}.json"
-            with open(split_labels_file, 'w') as f:
-                json.dump(split_labels, f, indent=2)
+            json.dump(all_labels, f, indent=2)
         
         print(f"📁 Metadata saved to: {metadata_file}")
         print(f"📁 Labels saved to: {labels_file}")

@@ -29,7 +29,7 @@ def step1_prepare_data():
     print("This will:")
     print("  • Load NASA APOD dataset (Astronomy Picture of the Day)")
     print("  • Download high-quality space images with detailed astronomical captions")
-    print("  • Create proper ML splits: 80% train, 10% validation, 10% test")
+    print("  • Images are numbered sequentially and can be run multiple times")
     print("  • Organize data in 'images/' folder")
     print()
     
@@ -38,6 +38,22 @@ def step1_prepare_data():
         os.system("python nasa_space_filter.py")
     else:
         print("⏭️  Skipping data preparation")
+
+def step1b_create_splits():
+    """Step 1b: Create train/validation/test splits"""
+    print("\n🔀 Step 1b: Create Splits")
+    print("-" * 40)
+    print("This will:")
+    print("  • Load all accumulated NASA images")
+    print("  • Create train/validation/test splits (80/10/10)")
+    print("  • Generate split label files for training")
+    print()
+    
+    if input("Create train/validation/test splits? (y/n): ").lower() == 'y':
+        print("\n🚀 Creating splits...")
+        os.system("python create_splits.py")
+    else:
+        print("⏭️  Skipping split creation")
 
 def step2_train_model():
     """Step 2: Train model"""
@@ -162,6 +178,7 @@ def run_all_steps():
     print("=" * 60)
     
     step1_prepare_data()
+    step1b_create_splits()
     step2_train_model()
     step3_compare_models()
     step4_evaluate_results()
@@ -176,25 +193,28 @@ def main():
     print("Choose an option:")
     print("   1. Run all steps")
     print("   2. Step 1: Prepare Data")
-    print("   3. Step 2: Train Model")
-    print("   4. Step 3: Compare Models")
-    print("   5. Step 4: Evaluate Results")
-    print("   6. Exit")
+    print("   3. Step 1b: Create Splits")
+    print("   4. Step 2: Train Model")
+    print("   5. Step 3: Compare Models")
+    print("   6. Step 4: Evaluate Results")
+    print("   7. Exit")
     print()
     
-    choice = input("Enter your choice (1-6): ").strip()
+    choice = input("Enter your choice (1-7): ").strip()
     
     if choice == '1':
         run_all_steps()
     elif choice == '2':
         step1_prepare_data()
     elif choice == '3':
-        step2_train_model()
+        step1b_create_splits()
     elif choice == '4':
-        step3_compare_models()
+        step2_train_model()
     elif choice == '5':
-        step4_evaluate_results()
+        step3_compare_models()
     elif choice == '6':
+        step4_evaluate_results()
+    elif choice == '7':
         print("👋 Goodbye!")
     else:
         print("❌ Invalid choice. Please run again.")
