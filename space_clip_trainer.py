@@ -7,7 +7,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
-from transformers import CLIPProcessor, CLIPModel, get_linear_schedule_with_warmup
+from transformers import CLIPProcessor, CLIPModel
+from transformers.optimization import get_linear_schedule_with_warmup
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,6 +19,8 @@ from typing import List, Tuple, Dict
 from space_clip_classifier import SpaceCLIPClassifier
 import requests
 from io import BytesIO
+from tqdm import tqdm
+import time
 
 class SpaceImageDataset(Dataset):
     """Dataset for space images with text labels"""
@@ -38,9 +41,12 @@ class SpaceImageDataset(Dataset):
         self.image_files = []
         image_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp'}
         
+        print(f"🔍 Scanning for images in {data_dir}...")
         for ext in image_extensions:
             self.image_files.extend(self.data_dir.glob(f"*{ext}"))
             self.image_files.extend(self.data_dir.glob(f"*{ext.upper()}"))
+        
+        print(f"✅ Found {len(self.image_files)} images")
         
         # Use provided labels or load from file
         if labels is not None:
@@ -138,10 +144,14 @@ class SpaceCLIPTrainer:
     """Trainer for fine-tuning CLIP on space images"""
     
     def __init__(self, model_name: str = "openai/clip-vit-base-patch32"):
+        # Fix tokenizer warnings
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
+        
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Using device: {self.device}")
         
         # Load pretrained model
+        print("🔄 Loading CLIP model...")
         self.model = CLIPModel.from_pretrained(model_name).to(self.device)
         self.processor = CLIPProcessor.from_pretrained(model_name)
         
@@ -151,7 +161,7 @@ class SpaceCLIPTrainer:
         self.num_epochs = 3
         self.warmup_steps = 100
         
-        print(f"Initialized trainer with {model_name}")
+        print(f"✅ Initialized trainer with {model_name}")
     
     def prepare_data(self, data_dir: str) -> Tuple[DataLoader, DataLoader, DataLoader]:
         """Prepare training, validation, and test data"""
@@ -163,7 +173,8 @@ class SpaceCLIPTrainer:
         test_labels_file = data_dir / "labels_test.json"
         
         if not all([train_labels_file.exists(), val_labels_file.exists(), test_labels_file.exists()]):
-            print(f"❌ Split label files not found. Please run filter_flickr30k.py first.")
+            print(f"❌ Split label files not found. Please run create_splits.py first.")
+            print(f"   Looking for: labels_train.json, labels_validation.json, labels_test.json")
             return None, None, None
         
         with open(train_labels_file, 'r') as f:
@@ -179,29 +190,30 @@ class SpaceCLIPTrainer:
         test_dataset = SpaceImageDataset(data_dir, self.processor, labels=test_labels)
         
         # Create dataloaders
+        print("🔄 Creating data loaders...")
         train_loader = DataLoader(
             train_dataset, 
             batch_size=self.batch_size, 
             shuffle=True,
-            num_workers=2
+            num_workers=0  # Reduce workers to avoid tokenizer warnings
         )
         val_loader = DataLoader(
             val_dataset, 
             batch_size=self.batch_size, 
             shuffle=False,
-            num_workers=2
+            num_workers=0
         )
         test_loader = DataLoader(
             test_dataset, 
             batch_size=self.batch_size, 
             shuffle=False,
-            num_workers=2
+            num_workers=0
         )
         
-        print(f"Prepared data:")
-        print(f"   Train: {len(train_dataset)} samples")
-        print(f"   Validation: {len(val_dataset)} samples")
-        print(f"   Test: {len(test_dataset)} samples")
+        print(f"✅ Data prepared:")
+        print(f"   Training: {len(train_dataset)} images")
+        print(f"   Validation: {len(val_dataset)} images")
+        print(f"   Test: {len(test_dataset)} images")
         return train_loader, val_loader, test_loader
     
     def train(self, data_dir: str, output_dir: str = "fine_tuned_clip"):
@@ -209,7 +221,11 @@ class SpaceCLIPTrainer:
         print("🚀 Starting CLIP fine-tuning...")
         
         # Prepare data
-        train_loader, val_loader = self.prepare_data(data_dir)
+        train_loader, val_loader, test_loader = self.prepare_data(data_dir)
+        
+        if train_loader is None or val_loader is None:
+            print("❌ Failed to prepare data. Please run create_splits.py first.")
+            return
         
         # Setup optimizer and scheduler
         optimizer = optim.AdamW(self.model.parameters(), lr=self.learning_rate)
@@ -223,13 +239,17 @@ class SpaceCLIPTrainer:
         training_history = {'train_loss': [], 'val_loss': []}
         
         for epoch in range(self.num_epochs):
-            print(f"\nEpoch {epoch + 1}/{self.num_epochs}")
+            print(f"\n🔄 Epoch {epoch + 1}/{self.num_epochs}")
             
             # Training phase
             self.model.train()
             train_loss = 0.0
             
-            for batch_idx, batch in enumerate(train_loader):
+            # Progress bar for training
+            train_pbar = tqdm(train_loader, desc=f"Training Epoch {epoch+1}", 
+                            leave=False, ncols=100)
+            
+            for batch_idx, batch in enumerate(train_pbar):
                 # Move batch to device
                 input_ids = batch['input_ids'].to(self.device)
                 attention_mask = batch['attention_mask'].to(self.device)
@@ -262,8 +282,11 @@ class SpaceCLIPTrainer:
                 
                 train_loss += loss.item()
                 
-                if batch_idx % 10 == 0:
-                    print(f"  Batch {batch_idx}/{len(train_loader)}, Loss: {loss.item():.4f}")
+                # Update progress bar
+                train_pbar.set_postfix({
+                    'Loss': f'{loss.item():.4f}',
+                    'Avg': f'{train_loss/(batch_idx+1):.4f}'
+                })
             
             avg_train_loss = train_loss / len(train_loader)
             
@@ -271,8 +294,12 @@ class SpaceCLIPTrainer:
             self.model.eval()
             val_loss = 0.0
             
+            # Progress bar for validation
+            val_pbar = tqdm(val_loader, desc=f"Validation Epoch {epoch+1}", 
+                          leave=False, ncols=100)
+            
             with torch.no_grad():
-                for batch in val_loader:
+                for batch_idx, batch in enumerate(val_pbar):
                     input_ids = batch['input_ids'].to(self.device)
                     attention_mask = batch['attention_mask'].to(self.device)
                     pixel_values = batch['pixel_values'].to(self.device)
@@ -293,6 +320,12 @@ class SpaceCLIPTrainer:
                            nn.CrossEntropyLoss()(logits_per_text, labels)) / 2
                     
                     val_loss += loss.item()
+                    
+                    # Update progress bar
+                    val_pbar.set_postfix({
+                        'Loss': f'{loss.item():.4f}',
+                        'Avg': f'{val_loss/(batch_idx+1):.4f}'
+                    })
             
             avg_val_loss = val_loss / len(val_loader)
             
@@ -401,7 +434,8 @@ def main():
     print("🌟 Space CLIP Trainer & Comparison Tool")
     print("=" * 50)
     
-    # Initialize trainer
+    # Initialize trainer with progress
+    print("🔄 Initializing trainer...")
     trainer = SpaceCLIPTrainer()
     
     # Example: Train on a dataset (uncomment when you have data)
@@ -410,6 +444,7 @@ def main():
     #     trainer.train(data_dir, "fine_tuned_clip")
     
     # Example: Compare models
+    print("🔄 Loading models for comparison...")
     comparison = ModelComparison()
     
     # Test images
@@ -420,7 +455,7 @@ def main():
     
     print("\n🔍 Comparing models on test images...")
     for i, image_url in enumerate(test_images, 1):
-        print(f"\nImage {i}:")
+        print(f"\n📸 Image {i}:")
         results = comparison.compare_predictions(image_url, top_k=3)
         
         print("Pretrained CLIP:")
@@ -433,6 +468,7 @@ def main():
                 print(f"  {j}. {category}: {confidence:.3f}")
     
     # Show comparison visualization
+    print("\n📊 Generating visualization...")
     comparison.visualize_comparison(test_images[0], top_k=5)
 
 if __name__ == "__main__":
