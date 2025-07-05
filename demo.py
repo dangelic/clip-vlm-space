@@ -28,6 +28,10 @@ def demo_basic_classification():
             
             for j, (category, confidence) in enumerate(predictions, 1):
                 print(f"   {j}. {category.capitalize()}: {confidence:.3f}")
+            
+            # Show visualization for each image
+            print(f"\n📊 Generating visualization for Image {i}...")
+            classifier.visualize_classification(image_url, top_k=5)
                 
         except Exception as e:
             print(f"   ❌ Error: {e}")
@@ -54,9 +58,7 @@ def demo_custom_image():
         for i, (category, confidence) in enumerate(predictions, 1):
             print(f"   {i}. {category.capitalize()}: {confidence:.3f}")
         
-        # Show visualization
-        print("\n📊 Generating visualization...")
-        classifier.visualize_classification(custom_image, top_k=5)
+        # Note: Visualization is now handled in demo_basic_classification
         
     except Exception as e:
         print(f"❌ Error: {e}")
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     # Custom image demo with visualization
     demo_custom_image()
     
-    print("\n🎉 Demo completed! Check out the visualization above.")
+    print("\n🎉 Demo completed! Check out the visualizations above.")
     print("\n💡 To use with your own images:")
     print("   1. Replace the image URLs in demo.py")
     print("   2. Or use local file paths")
