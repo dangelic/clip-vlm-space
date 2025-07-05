@@ -191,30 +191,30 @@ def main():
     show_workflow()
     
     print("Choose an option:")
-    print("   1. Run all steps")
-    print("   2. Step 1: Prepare Data")
-    print("   3. Step 1b: Create Splits")
-    print("   4. Step 2: Train Model")
-    print("   5. Step 3: Compare Models")
-    print("   6. Step 4: Evaluate Results")
-    print("   7. Exit")
+    print("   a. Run all steps")
+    print("   b. Step 1: Prepare Data")
+    print("   c. Step 1b: Create Splits")
+    print("   d. Step 2: Train Model")
+    print("   e. Step 3: Compare Models")
+    print("   f. Step 4: Evaluate Results")
+    print("   q. Exit")
     print()
     
-    choice = input("Enter your choice (1-7): ").strip()
+    choice = input("Enter your choice (a-f, q): ").strip().lower()
     
-    if choice == '1':
+    if choice == 'a':
         run_all_steps()
-    elif choice == '2':
+    elif choice == 'b':
         step1_prepare_data()
-    elif choice == '3':
+    elif choice == 'c':
         step1b_create_splits()
-    elif choice == '4':
+    elif choice == 'd':
         step2_train_model()
-    elif choice == '5':
+    elif choice == 'e':
         step3_compare_models()
-    elif choice == '6':
+    elif choice == 'f':
         step4_evaluate_results()
-    elif choice == '7':
+    elif choice == 'q':
         print("👋 Goodbye!")
     else:
         print("❌ Invalid choice. Please run again.")

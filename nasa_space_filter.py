@@ -92,11 +92,32 @@ class NASASpaceFilter:
             print(f"🔍 Fetching NASA APOD images (respecting rate limits)...")
             print(f"   API limits: 30 requests/hour, 50 requests/day")
             
-            space_candidates = []
-            current_date = start_date
+            # Generate random dates within the range for diversity
+            from datetime import datetime, timedelta
+            import random
             
-            # Fetch images one by one to respect rate limits
-            while len(space_candidates) < max_images and current_date <= end_date:
+            start_obj = datetime.strptime(start_date, '%Y-%m-%d')
+            end_obj = datetime.strptime(end_date, '%Y-%m-%d')
+            
+            # Create a list of random dates to fetch from
+            all_dates = []
+            current = start_obj
+            while current <= end_obj:
+                all_dates.append(current.strftime('%Y-%m-%d'))
+                current += timedelta(days=1)
+            
+            # Shuffle the dates for random selection
+            random.seed()  # Use current time for different results each run
+            random.shuffle(all_dates)
+            
+            print(f"   Shuffled {len(all_dates)} dates for random image selection")
+            
+            space_candidates = []
+            date_index = 0
+            
+            # Fetch images from random dates to respect rate limits
+            while len(space_candidates) < max_images and date_index < len(all_dates):
+                current_date = all_dates[date_index]
                 params = {
                     'api_key': api_key,
                     'date': current_date
@@ -146,11 +167,8 @@ class NASASpaceFilter:
                 except Exception as e:
                     print(f"⚠️  Error fetching {current_date}: {e}")
                 
-                # Move to next date
-                from datetime import datetime, timedelta
-                current_date_obj = datetime.strptime(current_date, '%Y-%m-%d')
-                current_date_obj += timedelta(days=1)
-                current_date = current_date_obj.strftime('%Y-%m-%d')
+                # Move to next random date
+                date_index += 1
             
             print(f"✅ Found {len(space_candidates)} NASA space images")
             
@@ -295,10 +313,9 @@ def main():
     metadata = filter_tool.filter_and_download(max_images)
     
     if metadata:
-        print(f"\n✅ Successfully downloaded {metadata['space_images_found']} NASA space images!")
-        print(f"📊 Split distribution:")
-        for split, count in metadata['splits'].items():
-            print(f"   {split.capitalize()}: {count} images")
+        print(f"\n✅ Successfully downloaded {metadata['new_images_downloaded']} new NASA space images!")
+        print(f"📊 Total images in folder: {metadata['total_images_in_folder']}")
+        print(f"📊 Next image number will be: {metadata['next_image_number']}")
         
         # Show samples
         filter_tool.show_samples(3)
