@@ -4,6 +4,7 @@ Demo script for the CLIP Space Image Classifier
 """
 
 from space_clip_classifier import SpaceCLIPClassifier
+from compare_models import ModelComparison
 import os
 import torch
 
@@ -11,6 +12,17 @@ def demo_basic_classification():
     """Demonstrate basic image classification"""
     print("🚀 Initializing CLIP Space Classifier...")
     classifier = SpaceCLIPClassifier()
+    
+    # Check if fine-tuned model exists
+    fine_tuned_path = "fine_tuned_clip" if os.path.exists("fine_tuned_clip") else None
+    if fine_tuned_path:
+        print("✅ Fine-tuned model found - will show comparisons")
+        fine_tuned_classifier = SpaceCLIPClassifier(fine_tuned_path=fine_tuned_path)
+        comparison = ModelComparison(fine_tuned_model_path=fine_tuned_path)
+    else:
+        print("⚠️  No fine-tuned model found - showing only pretrained results")
+        fine_tuned_classifier = None
+        comparison = None
     
     # Example space images from Unsplash with captions
     test_images = [
@@ -44,7 +56,7 @@ def demo_basic_classification():
     print("=" * 50)
     
     for i, img in enumerate(test_images, 1):
-        print(f"\n📸 Image {i}:")
+        print(f"\n📸 Image {i}: {img['caption']}")
         try:
             # Use the caption as text input if available
             if "caption" in img:
@@ -59,22 +71,29 @@ def demo_basic_classification():
                 with torch.no_grad():
                     outputs = classifier.model(**inputs)
                     logits_per_image = outputs.logits_per_image
-                    probs = torch.nn.functional.softmax(logits_per_image, dim=1)
-                top_probs, top_indices = torch.topk(probs, 3, dim=1)
-                print("   Using caption as text input:")
-                for j in range(3):
-                    print(f"   {j+1}. {img['caption']}: {top_probs[0][j].item():.3f}")
-                # Show visualization for each image
-                print(f"\n📊 Generating visualization for Image {i}...")
-                classifier.visualize_classification(img["url"], top_k=5)
+                    # For single caption, use sigmoid to get probability
+                    caption_score = torch.sigmoid(logits_per_image).item()
+                
+                print(f"   Caption match score: {caption_score:.3f}")
+                
+                # Show model comparison visualization for each image
+                print(f"\n📊 Generating model comparison for Image {i}...")
+                if comparison:
+                    comparison.visualize_comparison(img["url"], top_k=5, caption=img["caption"])
+                else:
+                    classifier.visualize_classification(img["url"], top_k=5)
             else:
                 predictions = classifier.classify_image(img["url"], top_k=3)
                 for j, (category, confidence) in enumerate(predictions, 1):
                     print(f"   {j}. {category.capitalize()}: {confidence:.3f}")
                 print(f"\n📊 Generating visualization for Image {i}...")
-                classifier.visualize_classification(img["url"], top_k=5)
+                if comparison:
+                    comparison.visualize_comparison(img["url"], top_k=5, caption=img.get("caption", ""))
+                else:
+                    classifier.visualize_classification(img["url"], top_k=5)
         except Exception as e:
             print(f"   ❌ Error: {e}")
+    
     print("\n" + "=" * 50)
     print("✅ Classification complete!")
 

@@ -387,7 +387,7 @@ class ModelComparison:
         
         return results
     
-    def visualize_comparison(self, image_path: str, top_k: int = 5):
+    def visualize_comparison(self, image_path: str, top_k: int = 5, caption: str = ""):
         """Visualize comparison between models"""
         results = self.compare_predictions(image_path, top_k)
         
@@ -395,13 +395,21 @@ class ModelComparison:
         image = self.pretrained_classifier.load_image(image_path)
         
         if self.fine_tuned_classifier:
-            # Create side-by-side comparison
+            # Create side-by-side comparison with dark theme
             fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+            fig.patch.set_facecolor('black')
             
             # Show image
             axes[0].imshow(image)
-            axes[0].set_title("Space Image")
+            axes[0].set_title("Input Image", fontsize=14, fontweight='bold', color='white')
             axes[0].axis('off')
+            axes[0].set_facecolor('black')
+            
+            # Add caption if provided
+            if caption:
+                axes[0].text(0.5, -0.05, f"Caption: {caption}", 
+                            ha='center', va='top', transform=axes[0].transAxes,
+                            fontsize=10, color='white', wrap=True)
             
             # Pretrained results
             pretrained_cats = [pred[0] for pred in results['pretrained']]
@@ -409,9 +417,18 @@ class ModelComparison:
             
             bars1 = axes[1].barh(range(len(pretrained_cats)), pretrained_conf, color='lightblue')
             axes[1].set_yticks(range(len(pretrained_cats)))
-            axes[1].set_yticklabels(pretrained_cats)
-            axes[1].set_xlabel('Confidence Score')
-            axes[1].set_title('Pretrained CLIP')
+            axes[1].set_yticklabels(pretrained_cats, color='white')
+            axes[1].set_xlabel('Confidence Score', color='white')
+            axes[1].set_title('Pretrained CLIP', fontsize=14, fontweight='bold', color='white')
+            axes[1].set_facecolor('black')
+            axes[1].tick_params(colors='white')
+            
+            # Add confidence values on bars
+            for i, (bar, conf) in enumerate(zip(bars1, pretrained_conf)):
+                width = bar.get_width()
+                axes[1].text(width + 0.01, bar.get_y() + bar.get_height()/2,
+                            f'{conf:.3f}', ha='left', va='center', 
+                            fontweight='bold', color='white', fontsize=10)
             
             # Fine-tuned results
             fine_tuned_cats = [pred[0] for pred in results['fine_tuned']]
@@ -419,15 +436,59 @@ class ModelComparison:
             
             bars2 = axes[2].barh(range(len(fine_tuned_cats)), fine_tuned_conf, color='lightgreen')
             axes[2].set_yticks(range(len(fine_tuned_cats)))
-            axes[2].set_yticklabels(fine_tuned_cats)
-            axes[2].set_xlabel('Confidence Score')
-            axes[2].set_title('Fine-tuned CLIP')
+            axes[2].set_yticklabels(fine_tuned_cats, color='white')
+            axes[2].set_xlabel('Confidence Score', color='white')
+            axes[2].set_title('Fine-tuned CLIP', fontsize=14, fontweight='bold', color='white')
+            axes[2].set_facecolor('black')
+            axes[2].tick_params(colors='white')
+            
+            # Add confidence values on bars
+            for i, (bar, conf) in enumerate(zip(bars2, fine_tuned_conf)):
+                width = bar.get_width()
+                axes[2].text(width + 0.01, bar.get_y() + bar.get_height()/2,
+                            f'{conf:.3f}', ha='left', va='center', 
+                            fontweight='bold', color='white', fontsize=10)
             
             plt.tight_layout()
             plt.show()
         else:
-            # Just show pretrained results
-            self.pretrained_classifier.visualize_classification(image_path, top_k)
+            # Just show pretrained results with dark theme
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+            fig.patch.set_facecolor('black')
+            
+            # Show image
+            ax1.imshow(image)
+            ax1.set_title("Input Image", fontsize=14, fontweight='bold', color='white')
+            ax1.axis('off')
+            ax1.set_facecolor('black')
+            
+            # Add caption if provided
+            if caption:
+                ax1.text(0.5, -0.05, f"Caption: {caption}", 
+                        ha='center', va='top', transform=ax1.transAxes,
+                        fontsize=10, color='white', wrap=True)
+            
+            # Show predictions
+            categories = [pred[0] for pred in results['pretrained']]
+            confidences = [pred[1] for pred in results['pretrained']]
+            
+            bars = ax2.barh(range(len(categories)), confidences, color='skyblue')
+            ax2.set_yticks(range(len(categories)))
+            ax2.set_yticklabels(categories, color='white')
+            ax2.set_xlabel('Confidence Score', color='white')
+            ax2.set_title('CLIP Classification Results', fontsize=14, fontweight='bold', color='white')
+            ax2.set_facecolor('black')
+            ax2.tick_params(colors='white')
+            
+            # Add confidence values on bars
+            for i, (bar, conf) in enumerate(zip(bars, confidences)):
+                width = bar.get_width()
+                ax2.text(width + 0.01, bar.get_y() + bar.get_height()/2,
+                        f'{conf:.3f}', ha='left', va='center', 
+                        fontweight='bold', color='white', fontsize=10)
+            
+            plt.tight_layout()
+            plt.show()
 
 def main():
     """Example usage"""

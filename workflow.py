@@ -91,20 +91,14 @@ def step3_compare_models():
     print("-" * 40)
     print("This will:")
     print("  • Load both pretrained and fine-tuned models")
-    print("  • Compare predictions on test images")
+    print("  • Show all test images with their captions")
+    print("  • Display model comparisons for each image")
     print("  • Show side-by-side visualizations")
-    print("  • Calculate agreement rates and confidence")
     print()
     
-    # Check if fine-tuned model exists
-    fine_tuned_dir = Path("fine_tuned_clip")
-    if not fine_tuned_dir.exists():
-        print("❌ No 'fine_tuned_clip/' folder found. Run Step 2 first.")
-        return
-    
-    if input("Run model comparison? (y/n): ").lower() == 'y':
-        print("\n🚀 Running model comparison...")
-        os.system("python compare_models.py")
+    if input("Run model comparison demo? (y/n): ").lower() == 'y':
+        print("\n🚀 Running model comparison demo...")
+        os.system("python demo.py")
     else:
         print("⏭️  Skipping model comparison")
 

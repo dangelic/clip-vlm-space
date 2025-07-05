@@ -114,6 +114,41 @@ class SpaceCLIPClassifier:
         
         return results
     
+    def classify_with_caption(self, image_path: str, caption: str) -> float:
+        """
+        Classify an image using a specific caption.
+        
+        Args:
+            image_path: Path to image file or URL
+            caption: Text caption to compare against the image
+            
+        Returns:
+            Similarity score between image and caption
+        """
+        # Load and preprocess image
+        image = self.load_image(image_path)
+        
+        # Prepare inputs for CLIP with the specific caption
+        inputs = self.processor(
+            text=[caption],
+            images=image,
+            return_tensors="pt",
+            padding=True,
+            truncation=True
+        )
+        
+        # Move tensors to device
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        
+        # Get CLIP predictions
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            logits_per_image = outputs.logits_per_image
+            # For single caption, we get a single similarity score
+            similarity_score = torch.sigmoid(logits_per_image).item()
+        
+        return similarity_score
+    
     def visualize_classification(self, image_path: str, top_k: int = 5):
         """
         Visualize the classification results for an image.
