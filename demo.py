@@ -16,6 +16,10 @@ def demo_basic_classification():
         "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800",  # Galaxy
         "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800",  # Stars
         "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",  # Space
+        "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=800",  # Nebula
+        "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=800",  # Planet
+        "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800",  # Black hole concept
+        "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800",     # Galaxy spiral
     ]
     
     print("\n🔍 Classifying Space Images...")

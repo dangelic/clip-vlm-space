@@ -1,0 +1,473 @@
+{
+  "total_processed": 31014,
+  "space_images_found": 50,
+  "space_keywords_used": [
+    "space",
+    "galaxy",
+    "planet",
+    "moon",
+    "nasa",
+    "orbit",
+    "nebula",
+    "telescope",
+    "milky way",
+    "cosmos",
+    "universe",
+    "solar system",
+    "mars",
+    "jupiter",
+    "saturn",
+    "venus",
+    "mercury",
+    "uranus",
+    "neptune",
+    "star",
+    "supernova",
+    "black hole",
+    "hubble",
+    "iss",
+    "spacex",
+    "meteor",
+    "comet",
+    "asteroid",
+    "lunar",
+    "eclipse",
+    "deep space",
+    "white hole",
+    "pulsar",
+    "quasar",
+    "light-year",
+    "spaceship",
+    "observatory",
+    "gravity",
+    "cosmic",
+    "exoplanet",
+    "extraterrestrial",
+    "sky",
+    "skywatch",
+    "satellite",
+    "astronaut",
+    "spacecraft",
+    "rocket",
+    "launch",
+    "constellation",
+    "aurora",
+    "meteorite",
+    "solar",
+    "stellar",
+    "interstellar",
+    "astronomical",
+    "celestial",
+    "orbital",
+    "space station",
+    "rover",
+    "probe"
+  ],
+  "splits": {
+    "train": 40,
+    "validation": 5,
+    "test": 5
+  },
+  "images": [
+    {
+      "filename": "flickr30k_space_train_0001.jpg",
+      "caption": "A smiling man looking at the sky.",
+      "split": "train",
+      "original_index": 30,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=450x338 at 0x108D1E060>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0002.jpg",
+      "caption": "Five people walking with a multicolored sky in the background.",
+      "split": "train",
+      "original_index": 32,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1E190>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0003.jpg",
+      "caption": "The reunion is in full swing with a moon bounce.",
+      "split": "train",
+      "original_index": 48,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1E520>",
+      "matched_keyword": "moon"
+    },
+    {
+      "filename": "flickr30k_space_train_0004.jpg",
+      "caption": "A woman inside a building is wearing a headscarf and looking out of a window through a mounted telescope.",
+      "split": "train",
+      "original_index": 68,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1E2C0>",
+      "matched_keyword": "telescope"
+    },
+    {
+      "filename": "flickr30k_space_train_0005.jpg",
+      "caption": "A man in a black coat walks past a red spaceship with a parking ticket stuck to its window.",
+      "split": "train",
+      "original_index": 69,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1E3F0>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0006.jpg",
+      "caption": "Three dogs are playing on grassy hill with a blue sky.",
+      "split": "train",
+      "original_index": 110,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1E650>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0007.jpg",
+      "caption": "Someone is standing on a long bridge with a cloudy blue sky in the background.",
+      "split": "train",
+      "original_index": 123,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1E780>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0008.jpg",
+      "caption": "A man is bowling at an alley with cosmic imagery including bowling balls and pins above the lanes.",
+      "split": "train",
+      "original_index": 196,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1E8B0>",
+      "matched_keyword": "cosmic"
+    },
+    {
+      "filename": "flickr30k_space_train_0009.jpg",
+      "caption": "One gu, wearing blue gloves and a brown vest, with a large camera pointed toward a Conquest trailer with a solar cell at his feet.",
+      "split": "train",
+      "original_index": 351,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1E9E0>",
+      "matched_keyword": "solar"
+    },
+    {
+      "filename": "flickr30k_space_train_0010.jpg",
+      "caption": "Multiple people walking on the pavement with a fence in the background all under the sky with clouds.",
+      "split": "train",
+      "original_index": 353,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1EC40>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0011.jpg",
+      "caption": "A baby in a white garment holds a flag with crescent moon and star.",
+      "split": "train",
+      "original_index": 374,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=375x500 at 0x108D1EB10>",
+      "matched_keyword": "moon"
+    },
+    {
+      "filename": "flickr30k_space_train_0012.jpg",
+      "caption": "Couple sits next to a body of water under a clear sky.",
+      "split": "train",
+      "original_index": 388,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=375x500 at 0x108D1EEA0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0013.jpg",
+      "caption": "A woman in a blue vest and a sky blue helmet stands with her bicycle in traffic.",
+      "split": "train",
+      "original_index": 430,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x358 at 0x108D1EFD0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0014.jpg",
+      "caption": "Three young boys fish at a boat launch.",
+      "split": "train",
+      "original_index": 474,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1F100>",
+      "matched_keyword": "launch"
+    },
+    {
+      "filename": "flickr30k_space_train_0015.jpg",
+      "caption": "A mountaineer sits in the snow in front of a yellow tent under clear blue sky.",
+      "split": "train",
+      "original_index": 504,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=332x500 at 0x108D1F230>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0016.jpg",
+      "caption": "Two people climbing a snowy mountain against a clear blue sky.",
+      "split": "train",
+      "original_index": 580,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x374 at 0x108D1F360>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0017.jpg",
+      "caption": "A person looking at the reflection of the moon.",
+      "split": "train",
+      "original_index": 611,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=304x500 at 0x108D1ED70>",
+      "matched_keyword": "moon"
+    },
+    {
+      "filename": "flickr30k_space_train_0018.jpg",
+      "caption": "A man wearing a hat with blond dreadlocks holds juggling pins under a blue sky.",
+      "split": "train",
+      "original_index": 624,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1F490>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0019.jpg",
+      "caption": "People walk around and mingle in a large open space with a dog.",
+      "split": "train",
+      "original_index": 675,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x401 at 0x108D1F5C0>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0020.jpg",
+      "caption": "Three people working together in a compact space.",
+      "split": "train",
+      "original_index": 686,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1F6F0>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0021.jpg",
+      "caption": "A skateboarder in a red baseball cap, black shirt and tan shorts skates alone in a wide open space.",
+      "split": "train",
+      "original_index": 776,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1F950>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0022.jpg",
+      "caption": "A boy dressed in khaki shorts and a red shirt runs on a beach with green, white and blue structures and a half moon behind him.",
+      "split": "train",
+      "original_index": 815,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x334 at 0x108D1F820>",
+      "matched_keyword": "moon"
+    },
+    {
+      "filename": "flickr30k_space_train_0023.jpg",
+      "caption": "A girls smiles as she looks at a little boy laughing while reaching for the sky",
+      "split": "train",
+      "original_index": 858,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x332 at 0x108D1FA80>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0024.jpg",
+      "caption": "A dog runs through the water as he looks up at the sky with his mouth open.",
+      "split": "train",
+      "original_index": 861,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108D1FBB0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0025.jpg",
+      "caption": "A person wearing a hat and carrying a knapsack walks uphill on a sand dune under a dark, cloudy sky and leaves the only visible footprints behind.",
+      "split": "train",
+      "original_index": 951,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x406 at 0x108D1FE10>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0026.jpg",
+      "caption": "A group of men talk to one another in a bright office space.",
+      "split": "train",
+      "original_index": 1057,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DEC050>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0027.jpg",
+      "caption": "A group of people seated at a picnic table under a tent space decorated with flags and stars.",
+      "split": "train",
+      "original_index": 1121,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x334 at 0x108DEC180>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0028.jpg",
+      "caption": "A motorcycle parked in a parking space next to a road by a hill.",
+      "split": "train",
+      "original_index": 1150,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108D1FCE0>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_train_0029.jpg",
+      "caption": "A young man in shorts and t-shirt is snowboarding under a bright blue sky.",
+      "split": "train",
+      "original_index": 1154,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x359 at 0x108DEC3E0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0030.jpg",
+      "caption": "A young blond-haired girl wearing a YMCA sweater looks into a telescope while another girl with glasses watches her.",
+      "split": "train",
+      "original_index": 1166,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=375x500 at 0x108DEC510>",
+      "matched_keyword": "telescope"
+    },
+    {
+      "filename": "flickr30k_space_train_0031.jpg",
+      "caption": "Earth, water and sky make this a great spot a time out.",
+      "split": "train",
+      "original_index": 1204,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x334 at 0x108DEC640>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0032.jpg",
+      "caption": "People on the beach are watching nine jets in the sky.",
+      "split": "train",
+      "original_index": 1287,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DEC2B0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0033.jpg",
+      "caption": "A family is observing nine jet planes flying below the clear sky.",
+      "split": "train",
+      "original_index": 1292,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DEC770>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0034.jpg",
+      "caption": "People on the beach look up to the sky to see a large heart written in the air by the contrail of a plane.",
+      "split": "train",
+      "original_index": 1293,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DEC8A0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0035.jpg",
+      "caption": "A dog running at the beach in front of the ocean and a bright blue cloudy sky.",
+      "split": "train",
+      "original_index": 1340,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DEC9D0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0036.jpg",
+      "caption": "A black man is holding is hands to the sky in a city.",
+      "split": "train",
+      "original_index": 1376,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DECC30>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0037.jpg",
+      "caption": "Two laborers are working on a roof with a bright blue sky in the background.",
+      "split": "train",
+      "original_index": 1407,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DECB00>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0038.jpg",
+      "caption": "A man stands at the end of a pier reading a book against a blue sky.",
+      "split": "train",
+      "original_index": 1454,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DECD60>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0039.jpg",
+      "caption": "A person stands outside near the water underneath a sky of setting sun and clouds.",
+      "split": "train",
+      "original_index": 1464,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x335 at 0x108DECFC0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_train_0040.jpg",
+      "caption": "A man standing on the top of a contraption of poles with the sky as his background.",
+      "split": "train",
+      "original_index": 1465,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=337x500 at 0x108DECE90>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_validation_0001.jpg",
+      "caption": "A group of women walk down the street all carrying open umbrellas to protect them from the rain coming down from the sky.",
+      "split": "validation",
+      "original_index": 1724,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=474x500 at 0x108DED0F0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_validation_0002.jpg",
+      "caption": "Five cowboys are sitting on horses inside an enclosed space.",
+      "split": "validation",
+      "original_index": 1753,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DED220>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_validation_0003.jpg",
+      "caption": "Two young girls run across a field as they fly a kite in the cloud-covered sky.",
+      "split": "validation",
+      "original_index": 1814,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=375x500 at 0x108DED350>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_validation_0004.jpg",
+      "caption": "One person helping another person up to the top of a mound of sand underneath a cloudy sky.",
+      "split": "validation",
+      "original_index": 1846,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x409 at 0x108DED5B0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_validation_0005.jpg",
+      "caption": "A crowd of people are gathered with a sky scene in the background.",
+      "split": "validation",
+      "original_index": 1858,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DED6E0>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_test_0001.jpg",
+      "caption": "A boy is performing a trick on his skateboard beneath white clouds and a blue sky as four sitting guys watch him.",
+      "split": "test",
+      "original_index": 1878,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DED810>",
+      "matched_keyword": "sky"
+    },
+    {
+      "filename": "flickr30k_space_test_0002.jpg",
+      "caption": "A man dressed in a shiny astronaut suit poses for a photographer on a city sidewalk.",
+      "split": "test",
+      "original_index": 1956,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=333x500 at 0x108DED940>",
+      "matched_keyword": "astronaut"
+    },
+    {
+      "filename": "flickr30k_space_test_0003.jpg",
+      "caption": "Rear view of a choir group standing on risers with a chair filling a space between the risers.",
+      "split": "test",
+      "original_index": 2071,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x333 at 0x108DED480>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_test_0004.jpg",
+      "caption": "One lady looking into space.",
+      "split": "test",
+      "original_index": 2201,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x375 at 0x108DEDBA0>",
+      "matched_keyword": "space"
+    },
+    {
+      "filename": "flickr30k_space_test_0005.jpg",
+      "caption": "Two Harley-Davison police motorcycles park in a single parking space.",
+      "split": "test",
+      "original_index": 2214,
+      "image": "<PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x427 at 0x108DEDA70>",
+      "matched_keyword": "space"
+    }
+  ]
+}

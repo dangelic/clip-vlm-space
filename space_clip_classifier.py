@@ -14,7 +14,7 @@ class SpaceCLIPClassifier:
     No training required - uses OpenAI's pretrained CLIP model.
     """
     
-    def __init__(self, model_name: str = "openai/clip-vit-base-patch32"):
+    def __init__(self, model_name: str = "openai/clip-vit-base-patch32", fine_tuned_path: str = None):
         """
         Initialize the CLIP classifier with a pretrained model.
         
@@ -24,9 +24,15 @@ class SpaceCLIPClassifier:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Using device: {self.device}")
         
-        # Load pretrained CLIP model and processor
-        self.model = CLIPModel.from_pretrained(model_name).to(self.device)
-        self.processor = CLIPProcessor.from_pretrained(model_name)
+        # Load CLIP model and processor
+        if fine_tuned_path:
+            print(f"Loading fine-tuned model from: {fine_tuned_path}")
+            self.model = CLIPModel.from_pretrained(fine_tuned_path).to(self.device)
+            self.processor = CLIPProcessor.from_pretrained(fine_tuned_path)
+        else:
+            print(f"Loading pretrained model: {model_name}")
+            self.model = CLIPModel.from_pretrained(model_name).to(self.device)
+            self.processor = CLIPProcessor.from_pretrained(model_name)
         
         # Space-related text categories for classification
         self.space_categories = [
@@ -73,18 +79,28 @@ class SpaceCLIPClassifier:
         image = self.load_image(image_path)
         
         # Prepare inputs for CLIP
+        # The processor tokenizes the text categories and preprocesses the image
+        # - text: List of space category strings to compare against
+        # - images: PIL Image object to be classified
+        # - return_tensors="pt": Return PyTorch tensors
+        # - padding=True: Pad text sequences to same length
+        # - truncation=True: Truncate text if too long
+        # Returns a dictionary with 'input_ids', 'attention_mask', 'pixel_values'
         inputs = self.processor(
             text=self.space_categories,
             images=image,
             return_tensors="pt",
             padding=True,
             truncation=True
-        ).to(self.device)
+        )
+        
+        # Move tensors to device
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
         
         # Get CLIP predictions
         with torch.no_grad():
             outputs = self.model(**inputs)
-            logits_per_image = outputs.logits_per_image
+            logits_per_image = outputs.logits_per_image # similarity scores between image and text
             probs = F.softmax(logits_per_image, dim=1)
         
         # Get top-k predictions
