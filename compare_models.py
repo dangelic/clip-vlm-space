@@ -183,7 +183,7 @@ def main():
     ]
     
     # Fine-tuned model path (uncomment when you have a trained model)
-    fine_tuned_path = None  # "fine_tuned_clip"
+    fine_tuned_path = "fine_tuned_clip"  # Use your trained model
     
     print("1. Single image comparison")
     compare_single_image(test_images[0], fine_tuned_path)

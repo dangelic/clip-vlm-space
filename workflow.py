@@ -18,6 +18,7 @@ def show_workflow():
     print("   2. 🎯 Train Model      - Fine-tune CLIP on space images")
     print("   3. 🔍 Compare Models   - Pretrained vs fine-tuned")
     print("   4. 📊 Evaluate Results - Analyze performance")
+    print("   5. 🧠 XAI Analysis     - Visualize model explanations")
     print()
     print("💡 Each step can be run independently")
     print()
@@ -124,6 +125,22 @@ def step4_evaluate_results():
     else:
         print("⏭️  Skipping results evaluation")
 
+def step5_xai_analysis():
+    """Step 5: XAI analysis"""
+    print("\n🧠 Step 5: XAI Analysis")
+    print("-" * 40)
+    print("This will:")
+    print("  • Generate feature importance plots for all test images")
+    print("  • Generate confidence heatmaps for all test images")
+    print("  • Generate Grad-CAM and gradient-based heatmaps for all test images")
+    print("  • Save all visualizations to the 'xai_results/' folder")
+    print()
+    if input("Run XAI analysis? (y/n): ").lower() == 'y':
+        print("\n🚀 Running XAI analysis...")
+        os.system("python xai_analysis.py")
+    else:
+        print("⏭️  Skipping XAI analysis")
+
 def evaluate_results():
     """Evaluate training results"""
     import json
@@ -176,20 +193,18 @@ def run_all_steps():
     """Run all steps in sequence"""
     print("🚀 Running Complete Workflow")
     print("=" * 60)
-    
     step1_prepare_data()
     step1b_create_splits()
     step2_train_model()
     step3_compare_models()
     step4_evaluate_results()
-    
+    step5_xai_analysis()
     print("\n🎉 Workflow Complete!")
     print("Check the results in the generated folders and files.")
 
 def main():
     """Main workflow interface"""
     show_workflow()
-    
     print("Choose an option:")
     print("   a. Run all steps")
     print("   b. Step 1: Prepare Data")
@@ -197,11 +212,10 @@ def main():
     print("   d. Step 2: Train Model")
     print("   e. Step 3: Compare Models")
     print("   f. Step 4: Evaluate Results")
+    print("   g. Step 5: XAI Analysis")
     print("   q. Exit")
     print()
-    
-    choice = input("Enter your choice (a-f, q): ").strip().lower()
-    
+    choice = input("Enter your choice (a-g, q): ").strip().lower()
     if choice == 'a':
         run_all_steps()
     elif choice == 'b':
@@ -214,6 +228,8 @@ def main():
         step3_compare_models()
     elif choice == 'f':
         step4_evaluate_results()
+    elif choice == 'g':
+        step5_xai_analysis()
     elif choice == 'q':
         print("👋 Goodbye!")
     else:
